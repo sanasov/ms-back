@@ -1,2 +1,2 @@
 rootProject.name = 'ms-back'
-include ':discovery', ':ms-report', 'config'
+include ':discovery', ':config', ':gateway', ':ms-report'
