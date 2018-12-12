@@ -1,0 +1,69 @@
+# Основные параметры приложения
+app:
+  name: uk-agent-service
+  port: 8088
+
+# Параметры Keycloak
+kc:
+  base-url: https://auth.tusvc.bcs.ru/auth
+  realm: Technical
+  client-id: test-app
+  client-secret: 59400b6a-b0bb-4215-9224-c775da4b428a
+  realm-url: ${kc.base-url}/realms/${kc.realm}
+  authorization-uri: ${kc.realm-url}/protocol/openid-connect/token
+
+server:
+  port: ${app.port}
+  context-path:
+spring:
+  application:
+    name: ${app.name}
+  main:
+    allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      max-file-size: 300MB
+      max-request-size: 300MB
+      enabled: true
+  jpa:
+    database: "POSTGRESQL"
+    show-sql: "true"
+    hibernate:
+      ddl-auto: "none"
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.PostgreSQL95Dialect"
+        temp:
+          # Disable feature detection by this undocumented parameter.
+          # Check the org.hibernate.engine.jdbc.internal.JdbcServiceImpl.configure method for more details.
+          use_jdbc_metadata_defaults: false
+  liquibase:
+    change-log: classpath:db/changesets/master.xml
+    check-change-log-location: true
+    enabled: true
+  datasource:
+    driver-class-name: "org.postgresql.Driver"
+    url: ${DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5432/postgres?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;connectionCollation=utf8_general_ci&amp;characterSetResults=UTF-8}
+    username: ${DATASOURCE_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+
+logging:
+  level:
+    root: INFO
+    ru.bcs: DEBUG
+
+keycloak:
+  auth-server-url: ${kc.base-url}
+  realm: ${kc.realm}
+  resource: ${kc.client-id}
+  credentials:
+    secret:  ${kc.client-secret}
+  bearer-only: true
+  cors: true
+  security-constraints:
+  - authRoles:
+    - uma_authorization
+    securityCollections:
+    - name: protected
+    - patterns:
+      - /v1/*
