@@ -1,11 +1,9 @@
 package ms.igrey.dev.msreport.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController()
-@RequestMapping("report")
+@RestController
 public class MainController {
 
     @GetMapping("test")

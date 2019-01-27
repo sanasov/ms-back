@@ -1,0 +1,13 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /video
+spring:
+  application:
+    name: ms-video
+  cloud:
+    config:
+      uri: http://localhost:8888
+      fail-fast: true
+#      password: ${CONFIG_SERVICE_PASSWORD}
+#      username: user
