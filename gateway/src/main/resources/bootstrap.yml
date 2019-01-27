@@ -5,5 +5,9 @@ spring:
     config:
       uri: http://localhost:8888
       fail-fast: true
+      retry:
+        initialInterval: 3000
+        maxAttempts: 100
+
 #      password: ${CONFIG_SERVICE_PASSWORD}
 #      username: user
