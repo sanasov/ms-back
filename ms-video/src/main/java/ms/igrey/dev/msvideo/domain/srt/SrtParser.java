@@ -5,12 +5,25 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 public class SrtParser {
 
     private final String srtFileName;
     private static final String EMPTY_LINE_REGEX = "\r\n\r\n";
+
+    public List<Subtitle> parsedSubtitlesFromOriginalSrtRows() {
+        return Stream.of(parsedElements())
+                .map(element -> new Subtitle(element, srtFileName.replace(".srt", "")))
+                .collect(Collectors.toList());
+    }
+
+    private String[] parsedElements() {
+        return fullSrt().split(EMPTY_LINE_REGEX);
+    }
 
     private String fullSrt() {
         try {
@@ -20,9 +33,4 @@ public class SrtParser {
             throw new RuntimeException(e);
         }
     }
-
-    public String[] parsedElements() {
-        return fullSrt().split(EMPTY_LINE_REGEX);
-    }
-
 }

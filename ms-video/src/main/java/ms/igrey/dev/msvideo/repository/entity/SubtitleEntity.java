@@ -17,10 +17,9 @@ import java.util.stream.Stream;
 import static org.springframework.data.elasticsearch.annotations.FieldType.Keyword;
 import static org.springframework.data.elasticsearch.annotations.FieldType.Text;
 
-@Document(indexName = "video_eng", type = "subtitle")
 @ToString
-@Getter
-@Setter
+@Getter @Setter
+@Document(indexName = "video_eng", type = "subtitle")
 public class SubtitleEntity {
     @Id
     private String id;
