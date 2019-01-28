@@ -39,7 +39,7 @@ public class ElasticSearchServiceTest {
 
     @Test
     public void findByPhraseTest() {
-        List<Subtitle> subtitles = subtitleService.findPhrase("Give your mother");
+        List<Subtitle> subtitles = subtitleService.findByPhrase("Give");
         assertThat(subtitles).hasSize(1);
         assertThat(subtitles.get(0).numberSeq()).isEqualTo(15);
     }

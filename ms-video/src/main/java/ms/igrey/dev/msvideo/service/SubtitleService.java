@@ -26,7 +26,7 @@ public class SubtitleService {
         );
     }
 
-    public List<Subtitle> findPhrase(String phraseOrWord) {
+    public List<Subtitle> findByPhrase(String phraseOrWord) {
         return subtitleRepository.findByLinesContaining(phraseOrWord, PAGE_REQUEST)
                 .stream()
                 .map(entity -> new Subtitle(entity))
