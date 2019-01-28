@@ -28,6 +28,7 @@ ext['springCloudVersion'] = 'Greenwich.M3'
 
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
+	implementation('org.springframework.boot:spring-boot-starter-data-elasticsearch')
     implementation('org.springframework.cloud:spring-cloud-starter-openfeign')
     implementation('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client')
     implementation('org.springframework.cloud:spring-cloud-starter-config')
@@ -35,6 +36,9 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile group: 'net.bramp.ffmpeg', name: 'ffmpeg', version: '0.6.2'
+//	compile group: 'org.elasticsearch', name: 'elasticsearch', version: '6.5.4'
+//	compile group: 'org.elasticsearch.client', name: 'transport', version: '6.5.4'
+//	compile group: 'org.springframework.data', name: 'spring-data-elasticsearch', version: '3.1.4.RELEASE'
     compileOnly 'org.projectlombok:lombok:1.18.4'
 }
 
