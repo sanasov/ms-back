@@ -1,6 +1,7 @@
 server:
   port: 8081
-  context-path:
+  servlet:
+    context-path: /report
 spring:
   application:
     name: ms-report
