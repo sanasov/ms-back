@@ -9,4 +9,6 @@ public interface SubtitleRepository extends ElasticsearchRepository<SubtitleEnti
 
 //    @Query("{\"query\" : {\"match\" : {\"_all\" : \"?0\"}}}")
     Page<SubtitleEntity> findByLinesContaining(String name, Pageable pageable);
+
+    Page<SubtitleEntity> findByLinesLike(String name, Pageable pageable);
 }

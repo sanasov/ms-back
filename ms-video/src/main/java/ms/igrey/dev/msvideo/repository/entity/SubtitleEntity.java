@@ -18,14 +18,18 @@ import static org.springframework.data.elasticsearch.annotations.FieldType.Keywo
 import static org.springframework.data.elasticsearch.annotations.FieldType.Text;
 
 @ToString
-@Getter @Setter
+@Getter
+@Setter
 @Document(indexName = "video_eng", type = "subtitle")
 public class SubtitleEntity {
     @Id
     private String id;
     private String start;
     private String end;
-    @MultiField(mainField = @Field(type = Text, fielddata = true), otherFields = { @InnerField(suffix = "verbatim", type = Keyword) })
+    @MultiField(
+            mainField = @Field(type = Text, fielddata = true),
+            otherFields = {@InnerField(suffix = "verbatim", type = Keyword)}
+    )
     private List<String> lines;
     private Integer numberSeq;
     private String filmId;

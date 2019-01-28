@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 @Data
 @Accessors(fluent = true)
 public class Subtitle {
-    private static final String NEXT_LINE = "\r\n";
+    private static final String NEXT_ROWS = "\r\n";
     private static final String TIME_SEPARATOR = " --> ";
     private final Integer numberSeq;
     private final String filmId;
@@ -22,7 +22,7 @@ public class Subtitle {
 
 
     public Subtitle(String subElement, String filmId) {
-        String[] subElementRows = subElement.split(NEXT_LINE);
+        String[] subElementRows = subElement.split(NEXT_ROWS);
         numberSeq = Integer.parseInt(subElementRows[0].replaceAll("[^\\d.]", ""));
         this.filmId = filmId;
         String[] startEnd = subElementRows[1].split(TIME_SEPARATOR); //  00:05:31,999 --> 00:05:34,583
