@@ -1,4 +1,4 @@
-package ms.igrey.dev.msvideo.srt;
+package ms.igrey.dev.msvideo.domain.srt;
 
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FileUtils;

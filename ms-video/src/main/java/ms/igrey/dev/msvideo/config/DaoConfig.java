@@ -19,17 +19,17 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = "ms.igrey.dev.msvideo")
+@EnableElasticsearchRepositories(basePackages = "ms.igrey.dev.msvideo.repostitory")
 @ComponentScan(basePackages = {"ms.igrey.dev.msvideo"})
 public class DaoConfig {
 
     @Value("${elasticsearch.host}")
     private String esHost;
 
-    @Value("${elasticsearch.home:/usr/local/Cellar/elasticsearch/5.6.0}")
+    @Value("${elasticsearch.home}")
     private String elasticsearchHome;
 
-    @Value("${elasticsearch.cluster.name:elasticsearch}")
+    @Value("${elasticsearch.cluster.name}")
     private String esClusterName;
 
     @Value("${elasticsearch.port}")
@@ -41,6 +41,7 @@ public class DaoConfig {
         TransportClient client = null;
         try {
             final Settings esSettings = Settings.builder()
+// TODO: what is this?
 //                    .put("client.transport.sniff", true)
 //                    .put("path.home", elasticsearchHome)
                     .put("cluster.name", esClusterName)

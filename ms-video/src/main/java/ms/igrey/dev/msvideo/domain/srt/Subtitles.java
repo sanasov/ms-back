@@ -1,4 +1,4 @@
-package ms.igrey.dev.msvideo.srt;
+package ms.igrey.dev.msvideo.domain.srt;
 
 import com.google.gson.Gson;
 

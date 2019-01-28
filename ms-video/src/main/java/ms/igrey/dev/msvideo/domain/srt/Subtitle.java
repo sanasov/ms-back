@@ -1,4 +1,4 @@
-package ms.igrey.dev.msvideo.srt;
+package ms.igrey.dev.msvideo.domain.srt;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
