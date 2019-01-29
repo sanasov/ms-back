@@ -20,13 +20,12 @@ import java.util.List;
 public class GoogleDriveApiUtils {
     private static final String APPLICATION_NAME = "IGREY_MS_VIDEO";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String TOKENS_DIRECTORY_PATH = "tokens";
     private static Drive driveService;
     /**
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
-    private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_METADATA_READONLY);
+    private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE);
 
     private static final String CLIENT_SECRET_FILE_NAME = "credentials.json";
     private static final java.io.File CREDENTIALS_FOLDER = new java.io.File(System.getProperty("user.home"), "googleDriveCredentials");
@@ -66,18 +65,23 @@ public class GoogleDriveApiUtils {
         // Build flow and trigger user authorization request.
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
+                .setDataStoreFactory(DATA_STORE_FACTORY)
                 .setAccessType("offline")
                 .build();
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(9123).build();
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    public static Drive getDriveService() throws IOException {
+    public static Drive getDriveService() {
         if (driveService != null) {
             return driveService;
         }
-        Credential credential = getCredentials();
+        Credential credential = null;
+        try {
+            credential = getCredentials();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //
         driveService = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential) //
                 .setApplicationName(APPLICATION_NAME).build();
