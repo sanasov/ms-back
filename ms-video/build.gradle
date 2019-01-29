@@ -41,6 +41,9 @@ dependencies {
 //	compile group: 'org.elasticsearch.client', name: 'transport', version: '6.5.4'
 //	compile group: 'org.springframework.data', name: 'spring-data-elasticsearch', version: '3.1.4.RELEASE'
     compileOnly 'org.projectlombok:lombok:1.18.4'
+	
+	compile 'com.google.apis:google-api-services-drive:v3-rev136-1.25.0'
+	//https://developers.google.com/drive/api/v3/quickstart/java
 }
 
 dependencyManagement {
