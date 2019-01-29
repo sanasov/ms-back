@@ -1,0 +1,14 @@
+1) pool .srt
+- github project
+- google disk
+- local disk
+
+2) pool video
+- local disk
+- move to HOME/films/filmId/numSeq.mp4  + apply somehow .srt
+
+3) film.srt == film.mp4 // srt name define filmId
+
+4) save all Subtitles in ES
+
+5) create enum FILM INFO():  FILM_ID, FILM_NAME
