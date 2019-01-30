@@ -1,6 +1,7 @@
 package ms.igrey.dev.msvideo.repository;
 
 import feign.Feign;
+import feign.codec.Encoder;
 import feign.codec.StringDecoder;
 import ms.igrey.dev.msvideo.api.OmdbFeign;
 import ms.igrey.dev.msvideo.api.feignCodec.GsonEncoder;

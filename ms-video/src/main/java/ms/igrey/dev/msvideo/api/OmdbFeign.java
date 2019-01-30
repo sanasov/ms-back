@@ -5,6 +5,6 @@ import feign.RequestLine;
 
 public interface OmdbFeign {
 
-    @RequestLine("GET /")
+    @RequestLine("GET /?apikey=f30f1c99&t={t}&{y}=y")
     String findByTitle(@Param("t") String filmTitle, @Param("y") String year);
 }
