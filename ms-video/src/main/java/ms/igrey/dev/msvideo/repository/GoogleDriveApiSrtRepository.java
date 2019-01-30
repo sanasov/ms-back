@@ -9,6 +9,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class GoogleDriveApiSrtRepository implements SrtRepository {
@@ -23,7 +24,14 @@ public class GoogleDriveApiSrtRepository implements SrtRepository {
 
     }
 
-    public String downloadFileContent(String fileId) {
+    @Override
+    public List<String> findAllSrtFileTitles() {
+        return retrieveFilesInFolder(SRT_FOLDER_ID).stream()
+                .map((file) -> file.getName().replace(".srt", ""))
+                .collect(Collectors.toList());
+    }
+
+    private String downloadFileContent(String fileId) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             driveService.files().get(fileId).executeMediaAndDownloadTo(outputStream);
