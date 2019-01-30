@@ -1,4 +1,4 @@
-package ms.igrey.dev.msvideo;
+package ms.igrey.dev.msvideo.config;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -17,7 +17,7 @@ import java.io.*;
 import java.util.Collections;
 import java.util.List;
 
-public class GoogleDriveApiUtils {
+public class GoogleDriveApiConfig {
     private static final String APPLICATION_NAME = "IGREY_MS_VIDEO";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static Drive driveService;
