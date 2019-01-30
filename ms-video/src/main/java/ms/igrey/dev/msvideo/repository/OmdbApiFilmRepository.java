@@ -1,32 +1,13 @@
 package ms.igrey.dev.msvideo.repository;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
-import com.google.gson.TypeAdapter;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import feign.Feign;
-import feign.RequestTemplate;
-import feign.Response;
-import feign.Util;
-import feign.codec.Decoder;
-import feign.codec.Encoder;
 import feign.codec.StringDecoder;
 import ms.igrey.dev.msvideo.api.OmdbFeign;
 import ms.igrey.dev.msvideo.api.feignCodec.GsonEncoder;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.Map;
-
-import static feign.Util.ensureClosed;
-import static feign.Util.resolveLastTypeParameter;
-
 public class OmdbApiFilmRepository implements FilmRepository {
+
+    private final String OMDB_API_KEY = "f30f1c99";
 
     @Override
     public String findByTitle(String filmTitle) {
