@@ -1,4 +1,4 @@
-package ms.igrey.dev.msvideo.domain.film;
+package ms.igrey.dev.msvideo.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -49,7 +49,7 @@ public class OmdbFilmDto {
     @SerializedName("Poster")
     @Expose
     private String poster;
-//    @SerializedName("Ratings")
+    //    @SerializedName("Ratings")
 //    @Expose
 //    private List<Rating> ratings = null;
     @SerializedName("Metascore")
