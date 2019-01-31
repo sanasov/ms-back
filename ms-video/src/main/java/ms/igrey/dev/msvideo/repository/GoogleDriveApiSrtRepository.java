@@ -4,6 +4,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import lombok.RequiredArgsConstructor;
+import ms.igrey.dev.msvideo.config.GoogleDriveApiConfig;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import java.io.IOException;
@@ -17,6 +18,10 @@ public class GoogleDriveApiSrtRepository implements SrtRepository {
     private static String SRT_FOLDER_ID = "1l65MuTDhFNOxv-8IIt7mKRh8nzkioFDo";
     private final Drive driveService;
 
+
+    public GoogleDriveApiSrtRepository() {
+        this.driveService = GoogleDriveApiConfig.getDriveService();
+    }
 
     @Override
     public String findSrtByFilmTitle(String filmTitle) {
