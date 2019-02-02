@@ -11,6 +11,7 @@ import ms.igrey.dev.msvideo.domain.srt.Subtitle;
 import ms.igrey.dev.msvideo.domain.srt.Subtitles;
 import ms.igrey.dev.msvideo.dto.OmdbFilmDto;
 import ms.igrey.dev.msvideo.repository.SrtRepository;
+import ms.igrey.dev.msvideo.repository.entity.SubtitleEntity;
 import ms.igrey.dev.msvideo.service.OmdbFilmService;
 import ms.igrey.dev.msvideo.service.SubtitleService;
 import org.apache.commons.collections.CollectionUtils;
@@ -38,13 +39,23 @@ public class PrepareContentProcess {
 
     public void fillContent() {
         Collection<String> newFilmsTitle = newFilmsTitle();
-        uploadFilmInfoToGoogleDrive(filledFileInfoJson());
+//        uploadFilmInfoToGoogleDrive(filledFileInfoJson());
         saveNewSubtitlesInElasticSearch(newFilmsTitle);
     }
 
-    private void saveNewSubtitlesInElasticSearch(Collection<String> newFilmsTitle) {
-        if (!elasticsearchTemplate.indexExists(Subtitle.class)) {
-            elasticsearchTemplate.createIndex(Subtitle.class);
+
+    public void uploadFilmInfoToGoogleDrive(java.io.File file) {
+        File fileMetaInfo = GoogleDriveUtils.findFileInFolderByTitle(FILM_INFO_FILE_TITLE, MOVIE_HERO_FOLDER_ID);
+        if (StringUtils.isNotBlank(fileMetaInfo.getId())) {
+            GoogleDriveUtils.delete(fileMetaInfo.getId());
+        }
+        GoogleDriveUtils.uploadFileToFolder(file, MOVIE_HERO_FOLDER_ID);
+        log.info(FILM_INFO_FILE_TITLE + " is uploaded to google disk");
+    }
+
+    public void saveNewSubtitlesInElasticSearch(Collection<String> newFilmsTitle) {
+        if (!elasticsearchTemplate.indexExists(SubtitleEntity.class)) {
+            elasticsearchTemplate.createIndex(SubtitleEntity.class);
         }
         for (String fileTitle : newFilmsTitle) {
             subtitleService.save(
@@ -98,12 +109,4 @@ public class PrepareContentProcess {
         }
     }
 
-    private void uploadFilmInfoToGoogleDrive(java.io.File file) {
-        File fileMetaInfo = GoogleDriveUtils.findFileInFolderByTitle(FILM_INFO_FILE_TITLE, MOVIE_HERO_FOLDER_ID);
-        if (StringUtils.isNotBlank(fileMetaInfo.getId())) {
-            GoogleDriveUtils.delete(fileMetaInfo.getId());
-        }
-        GoogleDriveUtils.uploadFileToFolder(file, MOVIE_HERO_FOLDER_ID);
-        log.info(FILM_INFO_FILE_TITLE + " is uploaded to google disk");
-    }
 }

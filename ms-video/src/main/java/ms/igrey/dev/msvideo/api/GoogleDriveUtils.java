@@ -7,6 +7,7 @@ import com.google.api.services.drive.model.FileList;
 import com.google.gson.Gson;
 import ms.igrey.dev.msvideo.config.GoogleDriveConfig;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +58,9 @@ public class GoogleDriveUtils {
     }
 
     public static String downloadFileContent(String fileId) {
+        if(StringUtils.isBlank(fileId)) {
+            throw new RuntimeException("File id should not be empty");
+        }
         try {
             Drive driveService = GoogleDriveConfig.getDriveService();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
