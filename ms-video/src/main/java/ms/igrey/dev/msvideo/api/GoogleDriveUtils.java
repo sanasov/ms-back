@@ -7,7 +7,6 @@ import com.google.api.services.drive.model.FileList;
 import com.google.gson.Gson;
 import ms.igrey.dev.msvideo.config.GoogleDriveConfig;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GoogleDriveUtils {
-    private final static String MOVIE_HERO_FOLDER_ID = "1J7WNanjAo-ytQSJ6oLCbiSUhBm6wXCTX";
 
     public static void uploadFileToFolder(java.io.File file, String folderId) {
         Drive driveService = GoogleDriveConfig.getDriveService();
@@ -58,16 +56,6 @@ public class GoogleDriveUtils {
         }
     }
 
-    public static void main(String[] args) {
-        File fileMetaInfo = findFileIdInFolderByTitle("FILMS_INFO.json", MOVIE_HERO_FOLDER_ID);
-        if (StringUtils.isBlank(fileMetaInfo.getId())) {
-            uploadFileToFolder(new java.io.File("C:\\Users\\MI\\Desktop\\FILMS_INFO.json"), MOVIE_HERO_FOLDER_ID);
-        } else {
-            updateFileToFolder(fileMetaInfo, new java.io.File("C:\\Users\\MI\\Desktop\\FILMS_INFO.json"));
-        }
-
-    }
-
     public static String downloadFileContent(String fileId) {
         try {
             Drive driveService = GoogleDriveConfig.getDriveService();
@@ -79,7 +67,7 @@ public class GoogleDriveUtils {
         }
     }
 
-    public static File findFileIdInFolderByTitle(String fileTitle, String parentFolderId) {
+    public static File findFileInFolderByTitle(String fileTitle, String parentFolderId) {
         File emptyFile = new File();
         emptyFile.setId("");
         return retrieveFilesInFolder(parentFolderId).stream()
@@ -87,7 +75,6 @@ public class GoogleDriveUtils {
                 .findAny()
                 .orElse(emptyFile);
     }
-
 
     public static List<File> retrieveFilesInFolder(String folderId) {
         Drive driveService = GoogleDriveConfig.getDriveService();
@@ -116,8 +103,8 @@ public class GoogleDriveUtils {
 
         return result;
     }
-
-    public static List<File> getGoogleSubFolders(String googleFolderIdParent) {
+//TODO: What difference between retrieveFilesInFolder and retrieveFilesInFolder2 ?
+    public static List<File> retrieveFilesInFolder2(String parentFolderId) {
 
         Drive driveService = GoogleDriveConfig.getDriveService();
 
@@ -125,12 +112,12 @@ public class GoogleDriveUtils {
         List<File> list = new ArrayList<>();
 
         String query = null;
-        if (googleFolderIdParent == null) {
+        if (parentFolderId == null) {
             query = " mimeType = 'application/vnd.google-apps.folder' " //
                     + " and 'root' in parents";
         } else {
             query = " mimeType = 'application/vnd.google-apps.folder' " //
-                    + " and '" + googleFolderIdParent + "' in parents";
+                    + " and '" + parentFolderId + "' in parents";
         }
 
         do {

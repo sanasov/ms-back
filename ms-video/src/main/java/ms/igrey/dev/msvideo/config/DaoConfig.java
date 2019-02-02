@@ -4,12 +4,12 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 
+import ms.igrey.dev.msvideo.repository.*;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -23,17 +23,17 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 @ComponentScan(basePackages = {"ms.igrey.dev.msvideo"})
 public class DaoConfig {
 
-//    @Value("${elasticsearch.host}")
+    //    @Value("${elasticsearch.host}")
     private String esHost = "localhost";
 
-//    @Value("${elasticsearch.home}")
+    //    @Value("${elasticsearch.home}")
     private String elasticsearchHome;
 
-//    @Value("${elasticsearch.cluster.name}")
+    //    @Value("${elasticsearch.cluster.name}")
     private String esClusterName;
 
-//    @Value("${elasticsearch.port}")
-    private Integer esPort =9300;
+    //    @Value("${elasticsearch.port}")
+    private Integer esPort = 9300;
 
 
     @Bean
@@ -57,5 +57,15 @@ public class DaoConfig {
     @Bean
     public ElasticsearchOperations elasticsearchTemplate() {
         return new ElasticsearchTemplate(client());
+    }
+
+    @Bean
+    public SrtRepository srtRepository() {
+        return new GoogleDriveSrtRepository();
+    }
+
+    @Bean
+    public FilmRepository filmRepository() {
+        return new OmdbFilmRepository();
     }
 }

@@ -10,7 +10,7 @@ import ms.igrey.dev.msvideo.dto.OmdbFilmDto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OmdbApiFilmRepository implements FilmRepository {
+public class OmdbFilmRepository implements FilmRepository {
 
     @Override
     public OmdbFilmDto findByTitle(String filmTitle) {
@@ -38,7 +38,7 @@ public class OmdbApiFilmRepository implements FilmRepository {
     }
 
     public static void main(String[] args) {
-        System.out.println(new OmdbApiFilmRepository().findByTitle("Godfather (1972)"));
+        System.out.println(new OmdbFilmRepository().findByTitle("Godfather (1972)"));
     }
 }
 

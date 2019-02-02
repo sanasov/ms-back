@@ -1,6 +1,5 @@
 package ms.igrey.dev.msvideo.repository;
 
-import com.google.api.services.drive.model.File;
 import lombok.RequiredArgsConstructor;
 import ms.igrey.dev.msvideo.api.GoogleDriveUtils;
 
@@ -15,7 +14,7 @@ public class GoogleDriveSrtRepository implements SrtRepository {
     @Override
     public String findSrtByFilmTitle(String filmTitle) {
         return GoogleDriveUtils.downloadFileContent(
-                GoogleDriveUtils.findFileIdInFolderByTitle(filmTitle, SRT_FOLDER_ID).getId()
+                GoogleDriveUtils.findFileInFolderByTitle(filmTitle, SRT_FOLDER_ID).getId()
         );
     }
 

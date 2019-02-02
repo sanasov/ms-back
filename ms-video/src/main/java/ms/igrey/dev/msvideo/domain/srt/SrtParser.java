@@ -12,25 +12,13 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class SrtParser {
 
-    private final String srtFileName;
+    private final String srtFileTitle;
+    private final String srtFileContent;
     private static final String EMPTY_LINE_REGEX = "\r\n\r\n";
 
     public List<Subtitle> parsedSubtitlesFromOriginalSrtRows() {
-        return Stream.of(parsedElements())
-                .map(element -> new Subtitle(element, srtFileName.replace(".srt", "")))
+        return Stream.of(srtFileContent.split(EMPTY_LINE_REGEX))
+                .map(element -> new Subtitle(element, srtFileTitle.replace(".srt", "")))
                 .collect(Collectors.toList());
-    }
-
-    private String[] parsedElements() {
-        return fullSrt().split(EMPTY_LINE_REGEX);
-    }
-
-    private String fullSrt() {
-        try {
-            File srtFile = ResourceUtils.getFile("classpath:" + srtFileName);
-            return FileUtils.readFileToString(srtFile, "UTF-8");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

@@ -1,4 +1,4 @@
-package ms.igrey.dev.msreport;
+package ms.igrey.dev.msreport.service;
 
 import ms.igrey.dev.msvideo.config.DaoConfig;
 import ms.igrey.dev.msvideo.domain.srt.SrtParser;
@@ -34,7 +34,7 @@ public class ElasticSearchServiceTest {
     public void before() {
         elasticsearchTemplate.deleteIndex(SubtitleEntity.class);
         elasticsearchTemplate.createIndex(SubtitleEntity.class);
-        subtitleService.save(new Subtitles(new SrtParser("BohemianRhapsody2018.srt").parsedSubtitlesFromOriginalSrtRows()));
+//        subtitleService.save(new Subtitles(new SrtParser("BohemianRhapsody2018.srt").parsedSubtitlesFromOriginalSrtRows()));
     }
 
     @Test

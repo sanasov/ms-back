@@ -82,6 +82,10 @@ public class OmdbFilmDto {
     @SerializedName("Response")
     @Expose
     private String response;
+
+    public String getTitleWithYear() {
+        return title + " " + "(" + year + ")";
+    }
 }
 //-----------------------------------ms.igrey.dev.msvideo.domain.film.Rating.java-----------------------------------
 //
