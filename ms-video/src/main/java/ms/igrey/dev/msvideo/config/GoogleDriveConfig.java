@@ -17,7 +17,7 @@ import java.io.*;
 import java.util.Collections;
 import java.util.List;
 
-public class GoogleDriveApiConfig {
+public class GoogleDriveConfig {
     private static final String APPLICATION_NAME = "IGREY_MS_VIDEO";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static Drive driveService;
@@ -28,7 +28,7 @@ public class GoogleDriveApiConfig {
     private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE);
 
     private static final String CLIENT_SECRET_FILE_NAME = "credentials.json";
-    private static final java.io.File CREDENTIALS_FOLDER = new java.io.File(System.getProperty("user.home"), "googleDriveCredentials");
+    private static final java.io.File CREDENTIALS_FOLDER = new java.io.File(System.getProperty("user.home"), "movieHero/googleDriveCredentials");
     // Global instance of the {@link FileDataStoreFactory}.
     private static FileDataStoreFactory DATA_STORE_FACTORY;
 
@@ -43,6 +43,23 @@ public class GoogleDriveApiConfig {
             System.exit(1);
         }
     }
+
+    public static Drive getDriveService() {
+        if (driveService != null) {
+            return driveService;
+        }
+        Credential credential = null;
+        try {
+            credential = getCredentials();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //
+        driveService = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential) //
+                .setApplicationName(APPLICATION_NAME).build();
+        return driveService;
+    }
+
     /**
      * Creates an authorized Credential object.
      *
@@ -72,20 +89,5 @@ public class GoogleDriveApiConfig {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    public static Drive getDriveService() {
-        if (driveService != null) {
-            return driveService;
-        }
-        Credential credential = null;
-        try {
-            credential = getCredentials();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //
-        driveService = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential) //
-                .setApplicationName(APPLICATION_NAME).build();
-        return driveService;
-    }
 
 }

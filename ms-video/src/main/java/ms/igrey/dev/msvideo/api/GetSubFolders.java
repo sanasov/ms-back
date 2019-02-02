@@ -3,7 +3,7 @@
 //import com.google.api.services.drive.Drive;
 //import com.google.api.services.drive.model.File;
 //import com.google.api.services.drive.model.FileList;
-//import ms.igrey.dev.msvideo.config.GoogleDriveApiConfig;
+//import ms.igrey.dev.msvideo.config.GoogleDriveConfig;
 //import org.apache.commons.io.output.ByteArrayOutputStream;
 //
 //import java.io.IOException;
@@ -17,7 +17,7 @@
 //
 //    public static final List<File> getGoogleSubFolders(String googleFolderIdParent) throws IOException {
 //
-//        Drive driveService = GoogleDriveApiConfig.getDriveService();
+//        Drive driveService = GoogleDriveConfig.getDriveService();
 //
 //        String pageToken = null;
 //        List<File> list = new ArrayList<>();
@@ -53,7 +53,7 @@
 //    }
 //
 //    public static String fileDownload(String fileId) {
-//        Drive driveService = GoogleDriveApiConfig.getDriveService();
+//        Drive driveService = GoogleDriveConfig.getDriveService();
 //        try {
 //            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 //            driveService.files().get(fileId).executeMediaAndDownloadTo(outputStream);
@@ -64,7 +64,7 @@
 //    }
 //
 //    private static List<File> retrieveFilesInFolder(String folderId) throws IOException {
-//        Drive driveService = GoogleDriveApiConfig.getDriveService();
+//        Drive driveService = GoogleDriveConfig.getDriveService();
 //        String query = "'" + folderId + "' in parents";
 //        List<File> result = new ArrayList<>();
 //        Drive.Files.List request = driveService.files().list().setQ(query);
@@ -86,7 +86,7 @@
 //    }
 //
 //    public static void main(String[] args) throws IOException {
-//        Drive driveService = GoogleDriveApiConfig.getDriveService();
+//        Drive driveService = GoogleDriveConfig.getDriveService();
 //
 //        List<File> googleRootFolders = getGoogleRootFolders();
 //        for (File folder : googleRootFolders) {
