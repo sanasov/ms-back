@@ -62,4 +62,12 @@ public class Subtitle {
     public LocalTime endTime() {
         return LocalTime.parse(end.replace(",", "."));
     }
+
+    public Long startOffset() {
+        return startTime().toNanoOfDay() / 1000_000;
+    }
+
+    public Long duration() {
+        return (endTime().toNanoOfDay() - startTime().toNanoOfDay()) / 1000_000;
+    }
 }
