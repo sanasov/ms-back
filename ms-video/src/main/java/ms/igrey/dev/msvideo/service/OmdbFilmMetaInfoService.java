@@ -2,15 +2,15 @@ package ms.igrey.dev.msvideo.service;
 
 import lombok.RequiredArgsConstructor;
 import ms.igrey.dev.msvideo.dto.OmdbFilmDto;
-import ms.igrey.dev.msvideo.repository.FilmRepository;
+import ms.igrey.dev.msvideo.repository.FilmMetaInfoRepository;
 import ms.igrey.dev.msvideo.repository.SrtRepository;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-public class OmdbFilmService {
+public class OmdbFilmMetaInfoService {
 
-    private final FilmRepository filmRepository;
+    private final FilmMetaInfoRepository filmRepository;
     private final SrtRepository srtRepository;
 
     public List<OmdbFilmDto> getFilmsInfo() {

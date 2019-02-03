@@ -7,12 +7,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ms.igrey.dev.msvideo.api.GoogleDriveUtils;
 import ms.igrey.dev.msvideo.domain.srt.SrtParser;
-import ms.igrey.dev.msvideo.domain.srt.Subtitle;
 import ms.igrey.dev.msvideo.domain.srt.Subtitles;
 import ms.igrey.dev.msvideo.dto.OmdbFilmDto;
 import ms.igrey.dev.msvideo.repository.SrtRepository;
 import ms.igrey.dev.msvideo.repository.entity.SubtitleEntity;
-import ms.igrey.dev.msvideo.service.OmdbFilmService;
+import ms.igrey.dev.msvideo.service.OmdbFilmMetaInfoService;
 import ms.igrey.dev.msvideo.service.SubtitleService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -34,7 +33,7 @@ public class PrepareContentProcess {
     private final static String FILM_INFO_FILE_TITLE = "filmInfo.json";
     private final SrtRepository srtRepository;
     private final SubtitleService subtitleService;
-    private final OmdbFilmService omdbFilmService;
+    private final OmdbFilmMetaInfoService omdbFilmService;
     private final ElasticsearchTemplate elasticsearchTemplate;
 
     public void fillContent() {

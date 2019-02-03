@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class MovieCutter {
 
     private final static String MOVIE_STORAGE_PATH = System.getProperty("user.home") + "/movieHero/movieStorage";
-    private final static String CUT_MOVIE_PATH = System.getProperty("user.home") + "/movieHero/cutMovie";
+    private final static String CUT_MOVIE_PATH = System.getProperty("user.home") + "/movieHero/cutMovies";
     private final FFmpegExecutor executor;
 
     public MovieCutter() {
@@ -32,6 +32,7 @@ public class MovieCutter {
     }
 
     public void cut(String movieTitle, Subtitles subtitles) {
+        new File(CUT_MOVIE_PATH + "/" + movieTitle).mkdirs();
         List<FFmpegBuilder> builders = subtitles.subtitles().stream()
                 .map(subtitle -> ffmpegBuilder(
                         findMovieFile(movieTitle),

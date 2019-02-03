@@ -4,7 +4,7 @@ import ms.igrey.dev.msvideo.dto.OmdbFilmDto;
 
 import java.util.List;
 
-public interface FilmRepository {
+public interface FilmMetaInfoRepository {
 
     OmdbFilmDto findByTitle(String filmTitle);
 

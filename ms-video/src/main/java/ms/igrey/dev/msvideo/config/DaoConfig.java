@@ -65,7 +65,12 @@ public class DaoConfig {
     }
 
     @Bean
-    public FilmRepository filmRepository() {
-        return new OmdbFilmRepository();
+    public FilmMetaInfoRepository filmRepository() {
+        return new OmdbFilmMetaInfoRepository();
+    }
+
+    @Bean
+    public MovieRepository movieRepository() {
+        return new FileSystemMovieRepository();
     }
 }
