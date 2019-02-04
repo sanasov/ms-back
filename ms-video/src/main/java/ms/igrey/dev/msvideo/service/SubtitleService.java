@@ -7,14 +7,12 @@ import ms.igrey.dev.msvideo.repository.SubtitleRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchPhraseQuery;
 
-@Service
 @RequiredArgsConstructor
 public class SubtitleService {
 

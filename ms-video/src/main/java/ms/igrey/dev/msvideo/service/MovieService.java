@@ -5,6 +5,8 @@ import ms.igrey.dev.msvideo.domain.srt.Subtitle;
 import ms.igrey.dev.msvideo.repository.MovieRepository;
 import org.springframework.core.io.FileSystemResource;
 
+import java.util.Comparator;
+
 @RequiredArgsConstructor
 public class MovieService {
 
@@ -15,7 +17,7 @@ public class MovieService {
     public FileSystemResource getMovieFragmentByPhrase(String phrase) {
         Subtitle subtitle = subtitleService.findByPhrase(phrase).stream()
                 .filter(sub -> sub.filmId().equals("Bohemian Rhapsody (2018)"))
-                .findAny()
+                .min(Comparator.comparing(Subtitle::numberSeq))
                 .orElse(null);
         return new FileSystemResource(movieRepository.findMovie(subtitle));
     }

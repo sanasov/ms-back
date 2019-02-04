@@ -54,10 +54,10 @@ public class DaoConfig {
         return client;
     }
 
-    @Bean
-    public ElasticsearchOperations elasticsearchTemplate() {
-        return new ElasticsearchTemplate(client());
-    }
+//    @Bean
+//    public ElasticsearchOperations elasticsearchTemplate() {
+//        return new ElasticsearchTemplate(client());
+//    }
 
     @Bean
     public SrtRepository srtRepository() {

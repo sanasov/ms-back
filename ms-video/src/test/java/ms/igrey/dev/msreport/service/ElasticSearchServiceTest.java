@@ -4,6 +4,7 @@ import ms.igrey.dev.msvideo.config.DaoConfig;
 import ms.igrey.dev.msvideo.domain.srt.SrtParser;
 import ms.igrey.dev.msvideo.domain.srt.Subtitle;
 import ms.igrey.dev.msvideo.domain.srt.Subtitles;
+import ms.igrey.dev.msvideo.repository.SrtRepository;
 import ms.igrey.dev.msvideo.repository.entity.SubtitleEntity;
 import ms.igrey.dev.msvideo.service.SubtitleService;
 import org.junit.Before;
@@ -28,18 +29,27 @@ public class ElasticSearchServiceTest {
 
     @Autowired
     private SubtitleService subtitleService;
-
+    @Autowired
+    private SrtRepository srtRepository;
+    private Subtitles subtitles;
 
     @Before
     public void before() {
+        String movieTitle = "Bohemian Rhapsody (2018)";
+        subtitles = new Subtitles(
+                new SrtParser(
+                        movieTitle,
+                        srtRepository.findSrtByFilmTitle(movieTitle)
+                ).parsedSubtitlesFromOriginalSrtRows()
+        );
         elasticsearchTemplate.deleteIndex(SubtitleEntity.class);
         elasticsearchTemplate.createIndex(SubtitleEntity.class);
-//        subtitleService.save(new Subtitles(new SrtParser("BohemianRhapsody2018.srt").parsedSubtitlesFromOriginalSrtRows()));
+        subtitleService.save(subtitles);
     }
 
     @Test
     public void findByPhraseTest() {
-        List<Subtitle> subtitles = subtitleService.findByPhrase("Give your mother");
+        List<Subtitle> subtitles = subtitleService.findByPhrase("mother");
         assertThat(subtitles).hasSize(1);
         assertThat(subtitles.get(0).numberSeq()).isEqualTo(15);
     }

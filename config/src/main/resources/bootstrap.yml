@@ -2,44 +2,16 @@ spring:
   application:
     name: config-platform-service
   cloud:
-    inetutils:
-      preferred-networks:
-        - 10.0
-      ignored-interfaces:
-        - eth2
-        - eth2@*
     config:
       server:
-        git:
-          uri: https://gitlab.gitlab.bcs.ru/platform/config-repo.git
-#         Proxy settings:
-          proxy:
-            https:
-              host: ${https.proxyHost}
-              port: ${https.proxyPort}
-#             TODO: для https нету nonProxyHost, но может он и не нужен
-              nonProxyHosts: ${https.nonProxyHosts:http.nonProxyHosts}
-            http:
-              host: ${http.proxyHost}
-              port: ${http.proxyPort}
-              nonProxyHosts: ${http.nonProxyHosts}
-          force-pull: true
-          repos:
-            bm:
-              uri: https://gitlab.gitlab.bcs.ru/bm/system/config-repo.git
-              proxy:
-                https:
-                  host: ${https.proxyHost}
-                  port: ${https.proxyPort}
-                  #             TODO: для https нету nonProxyHost, но может он и не нужен
-                  nonProxyHosts: ${https.nonProxyHosts:http.nonProxyHosts}
-                http:
-                  host: ${http.proxyHost}
-                  port: ${http.proxyPort}
-                  nonProxyHosts: ${http.nonProxyHosts}
-              pattern: bm-*
-              clone-on-start: true
-              # перетирает локальные изменения файлов
-              force-pull: true
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+        native:
+          search-locations: classpath:/shared
+  profiles:
+    active: native
+  security:
+    user:
+      password: ${CONFIG_SERVICE_PASSWORD}
+
+server:
+  port: 8888
+
