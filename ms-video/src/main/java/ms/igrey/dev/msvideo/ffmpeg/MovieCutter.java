@@ -10,10 +10,14 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static net.bramp.ffmpeg.FFmpeg.FPS_24;
+import static net.bramp.ffmpeg.FFmpeg.FPS_30;
 
 public class MovieCutter {
 
@@ -72,8 +76,10 @@ public class MovieCutter {
 
     private void split() throws IOException {
         File file = ResourceUtils.getFile("C:\\Users\\MI\\Desktop\\films\\Vertigo.avi");
+        File fileSrt = ResourceUtils.getFile("C:\\Users\\MI\\Desktop\\films\\Vertigo (1958).srt");
         FFmpegBuilder builder = new FFmpegBuilder()
                 .setInput(file.getAbsolutePath())
+                .addExtraArgs("-vf subtitles=" + fileSrt.getAbsolutePath())
                 .overrideOutputFiles(true)
                 .addOutput("C:\\Users\\MI\\Desktop\\films\\VertigoPart1" + ".mp4")
                 .setFormat("mp4")
@@ -86,6 +92,39 @@ public class MovieCutter {
                 .setDuration(5, TimeUnit.SECONDS)
                 .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
                 .done();
+//        System.out.println(builder.build());
         executor.createJob(builder).run();
+    }
+
+
+    private void removeRusAudioTrack() throws FileNotFoundException {
+        File file = ResourceUtils.getFile("C:\\Users\\MI\\movieHero\\movieStorage\\BackToTheFututre\\1\\Back to the Future.mkv");
+        FFmpegBuilder builder = new FFmpegBuilder()
+                .setInput(file.getAbsolutePath())
+                .overrideOutputFiles(true)
+                .addOutput("C:\\Users\\MI\\movieHero\\movieStorage\\BackToTheFututre\\1\\Back to the Future (eng).mp4")
+                .setFormat("mp4")
+                .addExtraArgs( "-map", "0:0")
+                .addExtraArgs("-map", "0:2")
+                .setAudioChannels(1)
+                .setAudioCodec("aac")
+                .setAudioSampleRate(48_000)
+                .setAudioBitRate(32768)
+                .setVideoFrameRate(FPS_24)
+//                .setVideoCodec("libx264")
+                .setVideoResolution(720, 480)
+                //.setVideoFilter("scale=320:trunc(ow/a/2)*2")
+                //.setVideoPixelFormat("yuv420p")
+                //.setVideoBitStreamFilter("noise")
+                .setVideoQuality(2)
+                .setStartOffset(600, TimeUnit.SECONDS)
+                .setDuration(5, TimeUnit.SECONDS)
+                .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
+                .done();
+        executor.createJob(builder).run();
+    }
+
+    public static void main(String[] args) throws IOException {
+        new MovieCutter().removeRusAudioTrack();
     }
 }

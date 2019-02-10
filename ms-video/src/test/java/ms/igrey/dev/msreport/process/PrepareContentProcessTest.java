@@ -1,11 +1,9 @@
 package ms.igrey.dev.msreport.process;
 
 import com.google.gson.Gson;
-import ms.igrey.dev.msreport.service.ElasticSearchServiceTest;
 import ms.igrey.dev.msvideo.PrepareContentProcess;
 import ms.igrey.dev.msvideo.config.DaoConfig;
 import ms.igrey.dev.msvideo.domain.srt.SrtParser;
-import ms.igrey.dev.msvideo.domain.srt.Subtitle;
 import ms.igrey.dev.msvideo.domain.srt.Subtitles;
 import ms.igrey.dev.msvideo.ffmpeg.MovieCutter;
 import ms.igrey.dev.msvideo.repository.SrtRepository;
@@ -47,7 +45,7 @@ public class PrepareContentProcessTest {
     }
 
     @Test
-    public void cutMoive() {
+    public void cutMovie() {
         String movieTitle = "Bohemian Rhapsody (2018)";
         new MovieCutter().cut(
                 movieTitle,
