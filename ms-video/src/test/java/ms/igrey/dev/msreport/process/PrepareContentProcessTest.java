@@ -34,7 +34,7 @@ public class PrepareContentProcessTest {
     @Before
     public void before() {
         elasticsearchTemplate.deleteIndex(SubtitleEntity.class);
-        process.fillContent();
+        process.fillContentInElastic();
     }
 
     @Test

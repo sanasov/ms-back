@@ -36,7 +36,7 @@ public class PrepareContentProcess {
     private final OmdbFilmMetaInfoService omdbFilmService;
     private final ElasticsearchTemplate elasticsearchTemplate;
 
-    public void fillContent() {
+    public void fillContentInElastic() {
         Collection<String> newFilmsTitle = newFilmsTitle();
 //        uploadFilmInfoToGoogleDrive(filledFileInfoJson());
         saveNewSubtitlesInElasticSearch(newFilmsTitle);

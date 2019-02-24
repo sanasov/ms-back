@@ -9,5 +9,10 @@ spring:
     config:
       uri: http://localhost:8888
       fail-fast: true
+      enabled: false
 #      password: ${CONFIG_SERVICE_PASSWORD}
 #      username: user
+
+eureka:
+  client:
+    enabled: false

@@ -63,17 +63,26 @@ public class MovieCutter {
                 .setInput(movieFile.getAbsolutePath())
                 .overrideOutputFiles(true)
                 .addOutput(CUT_MOVIE_PATH + "/" + FilenameUtils.removeExtension(movieFile.getName()) + "/" + fragmentNumber + ".mp4")
+                .addExtraArgs("-map", "0:0")
+                .addExtraArgs("-map", "0:2")
                 .setFormat("mp4")
+
                 .setAudioChannels(1)
                 .setAudioCodec("aac")
                 .setAudioSampleRate(48_000)
                 .setAudioBitRate(32768)
+
+                .setVideoFrameRate(FPS_24)
+                .setVideoResolution(720, 480)
+
                 .setStartOffset(startOffset, TimeUnit.MILLISECONDS)
                 .setDuration(duration, TimeUnit.MILLISECONDS)
                 .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
                 .done();
     }
 
+
+    //  Сделан для эксперимента. Можно удалить со временем
     private void split() throws IOException {
         File file = ResourceUtils.getFile("C:\\Users\\MI\\Desktop\\films\\Vertigo.avi");
         File fileSrt = ResourceUtils.getFile("C:\\Users\\MI\\Desktop\\films\\Vertigo (1958).srt");
@@ -96,15 +105,15 @@ public class MovieCutter {
         executor.createJob(builder).run();
     }
 
-
+    //  Сделан для эксперимента. Можно удалить со временем
     private void removeRusAudioTrack() throws FileNotFoundException {
-        File file = ResourceUtils.getFile("C:\\Users\\MI\\movieHero\\movieStorage\\BackToTheFututre\\1\\Back to the Future.mkv");
+        File file = ResourceUtils.getFile("C:\\Users\\MI\\movieHero\\movieStorage\\Back to the Future (1985).mkv");
         FFmpegBuilder builder = new FFmpegBuilder()
                 .setInput(file.getAbsolutePath())
                 .overrideOutputFiles(true)
-                .addOutput("C:\\Users\\MI\\movieHero\\movieStorage\\BackToTheFututre\\1\\Back to the Future (eng).mp4")
+                .addOutput("C:\\Users\\MI\\movieHero\\movieStorage\\Back to the Future (eng).mp4")
                 .setFormat("mp4")
-                .addExtraArgs( "-map", "0:0")
+                .addExtraArgs("-map", "0:0")
                 .addExtraArgs("-map", "0:2")
                 .setAudioChannels(1)
                 .setAudioCodec("aac")
@@ -116,7 +125,7 @@ public class MovieCutter {
                 //.setVideoFilter("scale=320:trunc(ow/a/2)*2")
                 //.setVideoPixelFormat("yuv420p")
                 //.setVideoBitStreamFilter("noise")
-                .setVideoQuality(2)
+//                .setVideoQuality(2)
                 .setStartOffset(600, TimeUnit.SECONDS)
                 .setDuration(5, TimeUnit.SECONDS)
                 .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)

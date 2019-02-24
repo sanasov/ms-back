@@ -1,15 +1,14 @@
 package ms.igrey.dev.msvideo.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import ms.igrey.dev.msvideo.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.FileNotFoundException;
-
+@Slf4j
 @RestController
 public class MainController {
 
@@ -27,6 +26,7 @@ public class MainController {
 
     @GetMapping(value = "video", produces = "video/mp4")
     public FileSystemResource video(@RequestParam("phrase") String phrase) {
+        log.info(phrase);
         return movieService.getMovieFragmentByPhrase(phrase);
     }
 
