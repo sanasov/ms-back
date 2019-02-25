@@ -3,11 +3,14 @@ package ms.igrey.dev.msvideo.domain.srt;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import ms.igrey.dev.msvideo.repository.entity.SubtitleEntity;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.time.temporal.ChronoUnit.MILLIS;
 
 @Data
 @Accessors(fluent = true)
@@ -19,7 +22,29 @@ public class Subtitle {
     private final String start; // 00:05:31,999
     private final String end;   // 00:05:34,583
     private final List<String> lines;
+    private final SubtitleQuality quality;
 
+
+    Subtitle union(Subtitle sub1, Subtitle sub2) {
+        List<String> lines = (List) CollectionUtils.union(sub1.lines, sub2.lines);
+        return new Subtitle(
+                sub1.numberSeq,
+                sub1.filmId,
+                sub1.start,
+                sub2.end,
+                lines,
+                estimateQuality(sub1.startTime().until(sub2.endTime(), MILLIS), lines)
+        );
+    }
+
+    public Subtitle(Integer numberSeq, String filmId, String start, String end, List<String> lines, SubtitleQuality quality) {
+        this.numberSeq = numberSeq;
+        this.filmId = filmId;
+        this.start = start;
+        this.end = end;
+        this.lines = lines;
+        this.quality = quality;
+    }
 
     public Subtitle(String subElement, String filmId) {
         String[] subElementRows = subElement.split(NEXT_ROWS);
@@ -29,6 +54,7 @@ public class Subtitle {
         this.start = startEnd[0];
         this.end = startEnd[1];
         this.lines = parsedLines(subElementRows);
+        this.quality = estimateQuality(duration(), lines);
     }
 
     public Subtitle(SubtitleEntity entity) {
@@ -37,6 +63,7 @@ public class Subtitle {
         this.start = entity.getStart();
         this.end = entity.getEnd();
         this.lines = entity.getLines();
+        this.quality = estimateQuality(duration(), entity.getLines());
     }
 
     public static SubtitleEntity toEntity(Subtitle subtitle) {
@@ -47,6 +74,11 @@ public class Subtitle {
         entity.setEnd(subtitle.end());
         entity.setLines(subtitle.lines());
         return entity;
+    }
+
+    SubtitleQuality estimateQuality(Long durationMilisec, List<String> lines) {
+
+        return SubtitleQuality.IDEAL;
     }
 
     List<String> parsedLines(String[] subElementRws) {
