@@ -18,16 +18,27 @@ import java.util.stream.Stream;
 @Setter
 @Accessors(fluent = true)
 public class Subtitles {
-    private final LinkedList<Subtitle> subtitles;
+    private final List<Subtitle> subtitles;
 
-//    List<Subtitle> unitedSubtitles() {
-//        ListIterator<Subtitle> li = subtitles.listIterator(0);
-//        while (li.hasNext()) {
-//            if(li.next().quality() == SubtitleQuality.SHORT) {
-//
-//            }
-//        }
-//    }
+    public List<Subtitle> mergedSubtitles() {
+        LinkedNode<Subtitle> node = new LinkedNode<>(subtitles);
+        do {
+            if (shortShortOrShortIdealCase(node)) {
+                node.setElm(node.elm().union(node.next().elm()));
+                node = node.next().remove();
+            } else {
+                node = node.next();
+            }
+        } while (node != null && node.hasNext());
+        return node.list().stream()
+                .filter(subtitle -> subtitle.quality() == SubtitleQuality.IDEAL)
+                .collect(Collectors.toList());
+    }
+
+    private boolean shortShortOrShortIdealCase(LinkedNode<Subtitle> subNode) {
+        return subNode.elm().quality() == SubtitleQuality.SHORT &&
+                (subNode.next().elm().quality() == SubtitleQuality.SHORT || subNode.next().elm().quality() == SubtitleQuality.IDEAL);
+    }
 
 
 }

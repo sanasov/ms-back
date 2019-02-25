@@ -36,7 +36,7 @@ public class LinkedNode<T> {
     }
 
     public static void main(String[] args) {
-        LinkedList<Integer> list = Stream.of(1, 101, 3, 102, 5, 103, 104, 8, 9, 6, 4, 122).collect(Collectors.toCollection(LinkedList::new));
+        LinkedList<Integer> list = Stream.of(1, 101, 3, 102, 5, 103, 104, 8, 9, 6, 4, 122, 4).collect(Collectors.toCollection(LinkedList::new));
         LinkedNode<Integer> node = new LinkedNode<>(list);
         System.out.println(list);
         System.out.println(node.list());
@@ -45,9 +45,9 @@ public class LinkedNode<T> {
             if (node.elm() < 10) {
                 node = node.remove();
                 System.out.println(node.list());
-                continue;
+            } else {
+                node = node.next();
             }
-            node = node.next();
         } while (node.hasNext());
         System.out.println(node.list());
     }
@@ -62,7 +62,7 @@ public class LinkedNode<T> {
         if (this.previous != null) {
             LinkedNode<T> previous = this.previous;
             previous.setNext(next);
-            this.next.setPrevious(previous);
+            if (this.next != null) this.next.setPrevious(previous);
             this.previous = null;
             this.next = null;
             this.first = null;

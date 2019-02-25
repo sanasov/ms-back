@@ -20,6 +20,6 @@ public class SrtParser {
     public List<Subtitle> parsedSubtitlesFromOriginalSrtRows() {
         return Stream.of(srtFileContent.split(EMPTY_LINE_REGEX))
                 .map(element -> new Subtitle(element, srtFileTitle.replace(".srt", "")))
-                .collect(Collectors.toCollection(LinkedList::new));
+                .collect(Collectors.toList());
     }
 }
