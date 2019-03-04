@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -22,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {DaoConfig.class})
+@ActiveProfiles("no-cloud")
 public class ElasticSearchServiceTest {
 
     @Autowired
@@ -49,9 +51,8 @@ public class ElasticSearchServiceTest {
 
     @Test
     public void findByPhraseTest() {
-        List<Subtitle> subtitles = subtitleService.findByPhrase("mother");
-        assertThat(subtitles).hasSize(1);
-        assertThat(subtitles.get(0).numberSeq()).isEqualTo(15);
+        List<Subtitle> subtitles = subtitleService.findByPhrase("give");
+        assertThat(subtitles).hasSize(10);
     }
 //
 //	@Test
