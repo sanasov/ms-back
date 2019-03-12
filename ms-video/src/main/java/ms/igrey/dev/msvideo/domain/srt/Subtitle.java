@@ -71,13 +71,14 @@ public class Subtitle {
         this.quality = estimateQuality(duration(), entity.getLines());
     }
 
-    public static SubtitleEntity toEntity(Subtitle subtitle) {
+    public static SubtitleEntity toEntity(Subtitle subtitle, String videoTypeTag) {
         SubtitleEntity entity = new SubtitleEntity();
         entity.setNumberSeq(subtitle.numberSeq());
         entity.setFilmId(subtitle.filmId());
         entity.setStart(subtitle.start());
         entity.setEnd(subtitle.end());
         entity.setLines(subtitle.lines());
+        entity.setTagArray(videoTypeTag);
         return entity;
     }
 

@@ -1,5 +1,6 @@
 package ms.igrey.dev.msvideo.ffmpeg;
 
+import ms.igrey.dev.msvideo.FSPath;
 import ms.igrey.dev.msvideo.domain.srt.Subtitles;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
@@ -21,8 +22,6 @@ import static net.bramp.ffmpeg.FFmpeg.FPS_30;
 
 public class MovieCutter {
 
-    private final static String MOVIE_STORAGE_PATH = System.getProperty("user.home") + "/movieHero/movieStorage";
-    private final static String CUT_MOVIE_PATH = System.getProperty("user.home") + "/movieHero/cutMovies";
     private final FFmpegExecutor executor;
 
     public MovieCutter() {
@@ -36,7 +35,7 @@ public class MovieCutter {
     }
 
     public void cut(String movieTitle, Subtitles subtitles) {
-        new File(CUT_MOVIE_PATH + "/" + movieTitle).mkdirs();
+        new File(FSPath.CUT_MOVIE_PATH + "/" + movieTitle).mkdirs();
         List<FFmpegBuilder> builders = subtitles.subtitles().stream()
                 .map(subtitle -> ffmpegBuilder(
                         findMovieFile(movieTitle),
@@ -51,7 +50,7 @@ public class MovieCutter {
     }
 
     private File findMovieFile(String movieTitle) {
-        return FileUtils.listFiles(new File(MOVIE_STORAGE_PATH), null, false).stream()
+        return FileUtils.listFiles(new File(FSPath.MOVIE_STORAGE_PATH), null, false).stream()
                 .filter(file -> file.getName().contains(movieTitle))
                 .findAny()
                 .orElseThrow(() -> new RuntimeException("There is no movie " + movieTitle + " in movie storage"));
@@ -62,7 +61,7 @@ public class MovieCutter {
                 .overrideOutputFiles(true)
                 .setInput(movieFile.getAbsolutePath())
                 .overrideOutputFiles(true)
-                .addOutput(CUT_MOVIE_PATH + "/" + FilenameUtils.removeExtension(movieFile.getName()) + "/" + fragmentNumber + ".mp4")
+                .addOutput(FSPath.CUT_MOVIE_PATH + "/" + FilenameUtils.removeExtension(movieFile.getName()) + "/" + fragmentNumber + ".mp4")
                 .addExtraArgs("-map", "0:0")
                 .addExtraArgs("-map", "0:2")
                 .setFormat("mp4")

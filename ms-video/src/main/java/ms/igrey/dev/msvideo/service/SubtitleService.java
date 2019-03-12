@@ -11,7 +11,9 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchPhraseQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 @RequiredArgsConstructor
 public class SubtitleService {
@@ -23,7 +25,7 @@ public class SubtitleService {
         subtitleRepository.saveAll(
                 subtitles
                         .subtitles().stream()
-                        .map(sub -> Subtitle.toEntity(sub))
+                        .map(sub -> Subtitle.toEntity(sub, "movie"))
                         .collect(Collectors.toList())
         );
     }
@@ -31,6 +33,7 @@ public class SubtitleService {
     public List<Subtitle> findByPhrase(String phraseOrWord) {
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(matchPhraseQuery("lines", phraseOrWord).slop(1))
+     //           .withQuery(boolQuery().must(termQuery("tags", "movie")))
                 .withPageable(PAGE_REQUEST)
                 .build();
         return subtitleRepository.search(searchQuery)

@@ -9,10 +9,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.InnerField;
 import org.springframework.data.elasticsearch.annotations.MultiField;
 
-import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.springframework.data.elasticsearch.annotations.FieldType.Keyword;
 import static org.springframework.data.elasticsearch.annotations.FieldType.Text;
@@ -35,4 +32,8 @@ public class SubtitleEntity {
     private String filmId;
     @Field(type = Keyword)
     private String[] tags;
+
+    public void setTagArray(String... tags) {
+        this.tags = tags;
+    }
 }

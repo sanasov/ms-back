@@ -38,12 +38,12 @@ public class PrepareContentProcess {
 
     public void fillContentInElastic() {
         Collection<String> newFilmsTitle = newFilmsTitle();
-//        uploadFilmInfoToGoogleDrive(filledFileInfoJson());
+//        uploadFilmInfoFileToGoogleDrive(filledFileInfoJson());
         saveNewSubtitlesInElasticSearch(newFilmsTitle);
     }
 
 
-    public void uploadFilmInfoToGoogleDrive(java.io.File file) {
+    public void uploadFilmInfoFileToGoogleDrive(java.io.File file) {
         File fileMetaInfo = GoogleDriveUtils.findFileInFolderByTitle(FILM_INFO_FILE_TITLE, MOVIE_HERO_FOLDER_ID);
         if (StringUtils.isNotBlank(fileMetaInfo.getId())) {
             GoogleDriveUtils.delete(fileMetaInfo.getId());
@@ -79,8 +79,8 @@ public class PrepareContentProcess {
         );
         log.info("New film titles: " + new Gson().toJson(newFilmsTitle));
         return newFilmsTitle;
-
     }
+
 
     private ArrayList<OmdbFilmDto> loadOmdbFilmsInfoFromFileJson() {
         return Lists.newArrayList(
