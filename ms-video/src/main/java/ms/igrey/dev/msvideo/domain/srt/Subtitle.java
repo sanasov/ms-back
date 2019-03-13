@@ -9,8 +9,8 @@ import org.apache.commons.collections.CollectionUtils;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
 
@@ -73,6 +73,7 @@ public class Subtitle {
 
     public static SubtitleEntity toEntity(Subtitle subtitle, String videoTypeTag) {
         SubtitleEntity entity = new SubtitleEntity();
+        entity.setId(subtitle.filmId() + "___" + subtitle.numberSeq());
         entity.setNumberSeq(subtitle.numberSeq());
         entity.setFilmId(subtitle.filmId());
         entity.setStart(subtitle.start());
@@ -83,7 +84,7 @@ public class Subtitle {
     }
 
     SubtitleQuality estimateQuality(Long durationMilisec, List<String> lines) {
-        if (durationMilisec < MAX_TRASH_DURATION_MILLSEC || wordCount(lines) <= 2) {
+        if (durationMilisec < MAX_TRASH_DURATION_MILLSEC || wordCount(lines) <= 2 || isNameOfBackgroundSound(lines)) {
             return SubtitleQuality.TRASH;
         } else if (durationMilisec < MAX_SHORT_DURATION_MILLSEC || wordCount(lines) <= 3) {
             return SubtitleQuality.SHORT;
@@ -92,6 +93,10 @@ public class Subtitle {
         }
     }
 
+    // (SIGHS), (COUGHS)
+    private boolean isNameOfBackgroundSound(List<String> lines) {
+        return lines.stream().anyMatch(line -> Pattern.compile("\\([A-Z ,]*\\)?").matcher(line).matches());
+    }
     private Long wordCount(List<String> lines) {
         return lines.stream()
                 .map(row -> Lists.newArrayList(row.split("\\s+")))
@@ -100,10 +105,12 @@ public class Subtitle {
                 .count();
     }
 
-    List<String> parsedLines(String[] subElementRws) {
-        return Stream.of(subElementRws)
-                .collect(Collectors.toList())
-                .subList(2, subElementRws.length);
+    private List<String> parsedLines(String[] subElementRws) {
+        return Lists.newArrayList(subElementRws)
+                .subList(2, subElementRws.length)
+                .stream()
+                .map(line -> line.replace("<i>", "").replace("</i>", ""))
+                .collect(Collectors.toList());
     }
 
     public LocalTime startTime() {

@@ -11,9 +11,7 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchPhraseQuery;
-import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 @RequiredArgsConstructor
 public class SubtitleService {
