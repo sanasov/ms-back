@@ -22,7 +22,7 @@ public class SubtitleService {
     public void save(Subtitles subtitles) {
         subtitleRepository.saveAll(
                 subtitles
-                        .subtitles().stream()
+                        .mergedSubtitles().stream()
                         .map(sub -> Subtitle.toEntity(sub, "movie"))
                         .collect(Collectors.toList())
         );
@@ -31,7 +31,7 @@ public class SubtitleService {
     public List<Subtitle> findByPhrase(String phraseOrWord) {
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(matchPhraseQuery("lines", phraseOrWord).slop(1))
-     //           .withQuery(boolQuery().must(termQuery("tags", "movie")))
+                //           .withQuery(boolQuery().must(termQuery("tags", "movie")))
                 .withPageable(PAGE_REQUEST)
                 .build();
         return subtitleRepository.search(searchQuery)
