@@ -30,7 +30,7 @@ public class SubtitleEntity {
     private List<String> lines;
     private Integer numberSeq;
     private String filmId;
-    @Field(type = Keyword)
+    @Field(type = Text)
     private String[] tags;
 
     public void setTagArray(String... tags) {

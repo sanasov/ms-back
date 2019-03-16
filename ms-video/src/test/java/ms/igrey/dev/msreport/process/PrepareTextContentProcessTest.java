@@ -1,28 +1,26 @@
 package ms.igrey.dev.msreport.process;
 
 import com.google.gson.Gson;
-import ms.igrey.dev.msvideo.PrepareContentProcess;
+import ms.igrey.dev.msvideo.PrepareTextContentProcess;
 import ms.igrey.dev.msvideo.config.DaoConfig;
-import ms.igrey.dev.msvideo.domain.srt.SrtParser;
-import ms.igrey.dev.msvideo.domain.srt.Subtitles;
-import ms.igrey.dev.msvideo.ffmpeg.MovieCutter;
 import ms.igrey.dev.msvideo.repository.SrtRepository;
-import ms.igrey.dev.msvideo.repository.entity.SubtitleEntity;
 import ms.igrey.dev.msvideo.service.SubtitleService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {DaoConfig.class})
-public class PrepareContentProcessTest {
+@ActiveProfiles("no-cloud")
+public class PrepareTextContentProcessTest {
 
     @Autowired
-    private PrepareContentProcess process;
+    private PrepareTextContentProcess process;
     @Autowired
     private SubtitleService subtitleService;
     @Autowired
@@ -33,8 +31,7 @@ public class PrepareContentProcessTest {
 
     @Before
     public void before() {
-        elasticsearchTemplate.deleteIndex(SubtitleEntity.class);
-        process.fillContentInElastic();
+        process.fillAllContentInElastic();
     }
 
     @Test
@@ -44,17 +41,4 @@ public class PrepareContentProcessTest {
         );
     }
 
-    @Test
-    public void cutMovie() {
-        String movieTitle = "Bohemian Rhapsody (2018)";
-        new MovieCutter().cut(
-                movieTitle,
-                new Subtitles(
-                        new SrtParser(
-                                movieTitle,
-                                srtRepository.findSrtByFilmTitle(movieTitle)
-                        ).parsedSubtitlesFromOriginalSrtRows()
-                )
-        );
-    }
 }

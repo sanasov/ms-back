@@ -8,4 +8,6 @@ public interface MovieRepository {
     File findMovie(String filmId, Integer numberSeq);
 
     List<String> findAllPreparedMovieTitles();
+
+    List<String> findAllCutMovieTitles();
 }

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class PrepareContentProcess {
+public class PrepareTextContentProcess {
     private final static String MOVIE_HERO_FOLDER_ID = "1J7WNanjAo-ytQSJ6oLCbiSUhBm6wXCTX";
     private final static String FILM_INFO_FILE_TITLE = "filmInfo.json";
     private final SrtRepository srtRepository;
@@ -36,10 +36,16 @@ public class PrepareContentProcess {
     private final OmdbFilmMetaInfoService omdbFilmService;
     private final ElasticsearchTemplate elasticsearchTemplate;
 
-    public void fillContentInElastic() {
+    public void fillNewContentInElastic() {
         Collection<String> newFilmsTitle = newFilmsTitle();
 //        uploadFilmInfoFileToGoogleDrive(filledFileInfoJson());
         saveNewSubtitlesInElasticSearch(newFilmsTitle);
+    }
+
+    public void fillAllContentInElastic() {
+        elasticsearchTemplate.deleteIndex(SubtitleEntity.class);
+        elasticsearchTemplate.createIndex(SubtitleEntity.class);
+        saveNewSubtitlesInElasticSearch(srtRepository.findAllSrtFileTitles());
     }
 
 

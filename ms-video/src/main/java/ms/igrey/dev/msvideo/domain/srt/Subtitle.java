@@ -3,6 +3,7 @@ package ms.igrey.dev.msvideo.domain.srt;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import ms.igrey.dev.msvideo.repository.entity.SubtitleEntity;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -16,8 +17,9 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 
 @Data
 @Accessors(fluent = true)
+@Slf4j
 public class Subtitle {
-    private static final String NEXT_ROWS = "\r\n";
+    private static final String NEXT_ROWS = "\n";
     private static final String TIME_SEPARATOR = " --> ";
     private static final Integer MAX_SHORT_DURATION_MILLSEC = 1500;
     private static final Integer MAX_TRASH_DURATION_MILLSEC = 500;
@@ -53,7 +55,13 @@ public class Subtitle {
 
     public Subtitle(String subElement, String filmId) {
         String[] subElementRows = subElement.split(NEXT_ROWS);
-        numberSeq = Integer.parseInt(subElementRows[0].replaceAll("[^\\d.]", ""));
+        try {
+            numberSeq = Integer.parseInt(subElementRows[0].replaceAll("[^\\d.]", ""));
+        } catch (Exception e) {
+            log.error("filmId: {}", filmId);
+            log.error("subElement: {}", subElement);
+            throw new RuntimeException(e);
+        }
         this.filmId = filmId;
         String[] startEnd = subElementRows[1].split(TIME_SEPARATOR); //  00:05:31,999 --> 00:05:34,583
         this.start = startEnd[0];
@@ -97,6 +105,7 @@ public class Subtitle {
     private boolean isNameOfBackgroundSound(List<String> lines) {
         return lines.stream().anyMatch(line -> Pattern.compile("\\([A-Z ,]*\\)?").matcher(line).matches());
     }
+
     private Long wordCount(List<String> lines) {
         return lines.stream()
                 .map(row -> Lists.newArrayList(row.split("\\s+")))

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FileSystemMovieRepository implements MovieRepository {
-    private final static List<String> vidoExtensions = Arrays.asList("avi", "mov", "mpeg", "mp4");
+    private final static List<String> VIDEO_EXTENSIONS = Arrays.asList("avi", "mov", "mpeg", "mp4", "mkv", "m4v");
 
     @Override
     public File findMovie(String filmId, Integer numberSeq) {
@@ -21,7 +21,15 @@ public class FileSystemMovieRepository implements MovieRepository {
     public List<String> findAllPreparedMovieTitles() {
         return Stream.of(new File(FSPath.MOVIE_STORAGE_PATH).listFiles())
                 .filter(file -> file.isFile())
-                .filter(file -> vidoExtensions.contains(FilenameUtils.getExtension(file.getName())))
+                .filter(file -> VIDEO_EXTENSIONS.contains(FilenameUtils.getExtension(file.getName())))
+                .map(file -> FilenameUtils.getBaseName(file.getName()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> findAllCutMovieTitles() {
+        return Stream.of(new File(FSPath.CUT_MOVIE_PATH).listFiles())
+                .filter(file -> file.isDirectory())
                 .map(file -> FilenameUtils.getBaseName(file.getName()))
                 .collect(Collectors.toList());
     }
