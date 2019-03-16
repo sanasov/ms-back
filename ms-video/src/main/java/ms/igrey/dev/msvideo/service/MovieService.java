@@ -5,6 +5,7 @@ import ms.igrey.dev.msvideo.domain.srt.Subtitle;
 import ms.igrey.dev.msvideo.repository.MovieRepository;
 import org.springframework.core.io.FileSystemResource;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -16,12 +17,12 @@ public class MovieService {
     private final SubtitleService subtitleService;
 
 
-    public FileSystemResource getMovieFragmentByPhrase(String phrase) {
+    public File getMovieFragmentByPhrase(String phrase) {
         Subtitle subtitle = subtitleService.findByPhrase(phrase).stream()
                 .filter(sub -> sub.filmId().equals("Bohemian Rhapsody (2018)"))
                 .min(Comparator.comparing(Subtitle::numberSeq))
                 .orElse(null);
-        return new FileSystemResource(movieRepository.findMovie(subtitle.filmId(), subtitle.numberSeq()));
+        return movieRepository.findMovie(subtitle.filmId(), subtitle.numberSeq());
     }
 
     public List<Subtitle> getSubtitles(String phrase) {
@@ -34,5 +35,9 @@ public class MovieService {
                 new FileSystemResource(movieRepository.findMovie("Bohemian Rhapsody (2018)", 101)),
                 new FileSystemResource(movieRepository.findMovie("Bohemian Rhapsody (2018)", 102))
         );
+    }
+
+    public File findMovie(String filmId, Integer numSeq) {
+        return movieRepository.findMovie(filmId, numSeq);
     }
 }

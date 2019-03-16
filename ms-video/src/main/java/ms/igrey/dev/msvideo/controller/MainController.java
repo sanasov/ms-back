@@ -38,7 +38,13 @@ public class MainController {
     @GetMapping(value = "video", produces = "video/mp4")
     public FileSystemResource video(@RequestParam("phrase") String phrase) {
         log.info(phrase);
-        return movieService.getMovieFragmentByPhrase(phrase);
+        return new FileSystemResource(movieService.getMovieFragmentByPhrase(phrase));
+    }
+
+    @GetMapping(value = "video/{filmId}/{numSeq}", produces = "video/mp4")
+    public FileSystemResource video(@PathVariable("filmId") String filmId, @PathVariable("numSeq") Integer numSeq) {
+        log.info("filmId={}, numSeq={}", filmId, numSeq);
+        return new FileSystemResource(movieService.findMovie(filmId, numSeq));
     }
 
     @GetMapping(value = "subtitles/{phrase}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
