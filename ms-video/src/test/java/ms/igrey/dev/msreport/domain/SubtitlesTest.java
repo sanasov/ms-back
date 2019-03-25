@@ -25,7 +25,7 @@ public class SubtitlesTest {
 
     @Test
     public void test() {
-        System.out.println(subtitles.mergedSubtitles().size());
+        System.out.println(subtitles.mergedSubtitles().subtitles().size());
     }
 
 }

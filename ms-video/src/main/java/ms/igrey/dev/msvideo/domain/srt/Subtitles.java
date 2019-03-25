@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import ms.igrey.dev.msvideo.domain.VideoInterval;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +21,7 @@ public class Subtitles {
         return subtitles.get(0).filmId();
     }
 
-    public List<Subtitle> mergedSubtitles() {
+    public Subtitles mergedSubtitles() {
         LinkedNode<Subtitle> node = new LinkedNode<>(subtitles);
         do {
             if (isNotFinishedSentence(node) || shortShortOrShortIdealCase(node)) {
@@ -30,8 +31,18 @@ public class Subtitles {
                 node = node.next();
             }
         } while (node != null && node.hasNext());
-        return node.list().stream()
-                .filter(subtitle -> subtitle.quality() == SubtitleQuality.IDEAL)
+        return new Subtitles(
+                node.list().stream()
+                        .filter(subtitle -> subtitle.quality() == SubtitleQuality.IDEAL)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    public List<Subtitle> partOfSubtitles(Integer partNumber, Integer partsAmount) {
+        VideoInterval interval = new VideoInterval(subtitles.size(), partsAmount);
+        Long diffTimeMillis = subtitles.get(interval.startNumSeq(partNumber)).startOffset();
+        return subtitles.subList(interval.startNumSeq(partNumber), interval.endNumSeq(partNumber) + 1).stream()
+                .map(subtitle -> subtitle.shiftedSubtitle(diffTimeMillis))
                 .collect(Collectors.toList());
     }
 
@@ -44,5 +55,6 @@ public class Subtitles {
                 (subNode.next().elm().quality() == SubtitleQuality.SHORT || subNode.next().elm().quality() == SubtitleQuality.IDEAL);
     }
 
-
 }
+
+

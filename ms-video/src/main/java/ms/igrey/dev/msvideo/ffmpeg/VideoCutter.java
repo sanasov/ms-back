@@ -1,7 +1,9 @@
 package ms.igrey.dev.msvideo.ffmpeg;
 
 import ms.igrey.dev.msvideo.FSPath;
+import ms.igrey.dev.msvideo.domain.VideoInterval;
 import ms.igrey.dev.msvideo.domain.srt.Subtitle;
+import ms.igrey.dev.msvideo.domain.srt.Subtitles;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.FFprobe;
@@ -19,24 +21,41 @@ import java.util.stream.Collectors;
 
 import static net.bramp.ffmpeg.FFmpeg.FPS_24;
 
-public class MovieCutter {
+public class VideoCutter {
 
     private final FFmpegExecutor executor;
 
-    public MovieCutter() {
+    public VideoCutter() {
         try {
             FFmpeg ffmpeg = new FFmpeg("C:\\programs\\FFMPEG\\bin\\ffmpeg.exe");
             FFprobe ffprobe = new FFprobe("C:\\programs\\FFMPEG\\bin\\ffprobe.exe");
             this.executor = new FFmpegExecutor(ffmpeg, ffprobe);
         } catch (IOException e) {
-            throw new RuntimeException("Could not init MovieCutter", e);
+            throw new RuntimeException("Could not init VideoCutter", e);
         }
     }
+
+
+    public void cutIntoParts(String movieTitle, Subtitles subtitles, Integer partsAmount) {
+        new File(FSPath.CUT_MOVIE_PATH + "/" + movieTitle).mkdirs();
+        VideoInterval interval = new VideoInterval(subtitles.subtitles().size(), partsAmount);
+        for (int i = 1; i <= partsAmount; i++) {
+            executor.createJob(
+                    cutPartFFMPEGBuilder(
+                            findMoviePartFile(movieTitle,i),
+                            i,
+                            subtitles.subtitles().get(interval.startNumSeq(i)).startOffset(),
+                            subtitles.subtitles().get(interval.endNumSeq(i)).duration()
+                    )
+            ).run();
+        }
+    }
+
 
     public void cut(String movieTitle, List<Subtitle> subtitles) {
         new File(FSPath.CUT_MOVIE_PATH + "/" + movieTitle).mkdirs();
         List<FFmpegBuilder> builders = subtitles.stream()
-                .map(subtitle -> ffmpegBuilder(
+                .map(subtitle -> cutFragmentFFMPEGBuilder(
                         findMovieFile(movieTitle),
                         subtitle.numberSeq(),
                         subtitle.startOffset(),
@@ -55,14 +74,55 @@ public class MovieCutter {
                 .orElseThrow(() -> new RuntimeException("There is no movie " + movieTitle + " in movie storage"));
     }
 
-    private FFmpegBuilder ffmpegBuilder(File movieFile, Integer fragmentNumber, Long startOffset, Long duration) {
+    private File findMoviePartFile(String movieTitle, Integer partNumber) {
+        return FileUtils.listFiles(new File(FSPath.CUT_MOVIE_PATH + "/" + movieTitle), null, false).stream()
+                .filter(file -> file.getName().contains("part" + partNumber))
+                .findAny()
+                .orElseThrow(() -> new RuntimeException("There is no part of movie " + movieTitle + " in movie cut with part number: " + partNumber));
+    }
+
+    private void removeMoviePartFiles(String movieTitle) {
+        FileUtils.listFiles(new File(FSPath.CUT_MOVIE_PATH + "/" + movieTitle), null, false).stream()
+                .filter(file -> file.getName().contains("part"))
+                .forEach(file -> file.delete());
+    }
+
+    /**
+     * Делим фильм на несколько частей. А эти части делим потом на фрогменты
+     * Здесь удаляется русский дубляж
+     */
+    private FFmpegBuilder cutPartFFMPEGBuilder(File movieFile, Integer partNumber, Long startOffset, Long duration) {
+        return new FFmpegBuilder()
+                .overrideOutputFiles(true)
+                .setInput(movieFile.getAbsolutePath())
+                .overrideOutputFiles(true)
+                .addOutput(FSPath.CUT_MOVIE_PATH + "/" + FilenameUtils.removeExtension(movieFile.getName()) + "/part" + partNumber + ".mp4")
+                .addExtraArgs("-map", "0:0")
+                .addExtraArgs("-map", "0:2")       //удаляется русская аудиодорожка, как правило, она первая среди аудиодорожек
+                .setFormat("mp4")
+
+                .setAudioChannels(1)
+                .setAudioCodec("aac")
+                .setAudioSampleRate(48_000)
+                .setAudioBitRate(32768)
+
+                .setVideoFrameRate(FPS_24)
+                .setVideoResolution(720, 480)
+
+                .setStartOffset(startOffset, TimeUnit.MILLISECONDS)
+                .setDuration(duration, TimeUnit.MILLISECONDS)
+                .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
+                .done();
+    }
+
+    private FFmpegBuilder cutFragmentFFMPEGBuilder(File movieFile, Integer fragmentNumber, Long startOffset, Long duration) {
         return new FFmpegBuilder()
                 .overrideOutputFiles(true)
                 .setInput(movieFile.getAbsolutePath())
                 .overrideOutputFiles(true)
                 .addOutput(FSPath.CUT_MOVIE_PATH + "/" + FilenameUtils.removeExtension(movieFile.getName()) + "/" + fragmentNumber + ".mp4")
                 .addExtraArgs("-map", "0:0")
-                .addExtraArgs("-map", "0:2")
+                .addExtraArgs("-map", "0:1")
                 .setFormat("mp4")
 
                 .setAudioChannels(1)
@@ -132,6 +192,6 @@ public class MovieCutter {
     }
 
     public static void main(String[] args) throws IOException {
-        new MovieCutter().removeRusAudioTrack();
+        new VideoCutter().removeRusAudioTrack();
     }
 }
