@@ -22,7 +22,7 @@ public class SubtitleService {
     public void save(Subtitles subtitles) {
         subtitleRepository.saveAll(
                 subtitles
-                        .mergedSubtitles().stream()
+                        .mergedSubtitles().subtitles().stream()
                         .map(sub -> Subtitle.toEntity(sub, "movie"))
                         .collect(Collectors.toList())
         );

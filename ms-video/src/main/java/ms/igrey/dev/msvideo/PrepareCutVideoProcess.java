@@ -61,7 +61,7 @@ public class PrepareCutVideoProcess {
                         movieTitleForCutting,
                         srtRepository.findSrtByFilmTitle(movieTitleForCutting)
                 ).parsedSubtitlesFromOriginalSrtRows()
-        );
+        ).mergedSubtitles();
         VideoCutter videoCutter = new VideoCutter();
         for (int i = 1; i <= PARTS_AMOUNT; i++) {
             videoCutter.cut(movieTitleForCutting, subtitles.partOfSubtitles(i, PARTS_AMOUNT));

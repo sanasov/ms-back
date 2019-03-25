@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class Subtitles {
     private final List<Subtitle> subtitles;
 
-    public List<Subtitle> mergedSubtitles() {
+    public Subtitles mergedSubtitles() {
         LinkedNode<Subtitle> node = new LinkedNode<>(subtitles);
         do {
             if (shortShortOrShortIdealCase(node)) {
@@ -27,9 +27,11 @@ public class Subtitles {
                 node = node.next();
             }
         } while (node != null && node.hasNext());
-        return node.list().stream()
-                .filter(subtitle -> subtitle.quality() == SubtitleQuality.IDEAL)
-                .collect(Collectors.toList());
+        return new Subtitles(
+                node.list().stream()
+                        .filter(subtitle -> subtitle.quality() == SubtitleQuality.IDEAL)
+                        .collect(Collectors.toList())
+        );
     }
 
     public List<Subtitle> partOfSubtitles(Integer partNumber, Integer partsAmount) {
