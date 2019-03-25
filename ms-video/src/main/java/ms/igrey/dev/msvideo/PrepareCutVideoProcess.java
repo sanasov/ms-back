@@ -32,6 +32,7 @@ public class PrepareCutVideoProcess {
     }
 
     //Bohemian Rhapsody (2018)
+    //TODO need find subtitles from Elastic
     public void cutMovie(String movieTitleForCutting) {
         new MovieCutter().cut(
                 movieTitleForCutting,
@@ -40,7 +41,7 @@ public class PrepareCutVideoProcess {
                                 movieTitleForCutting,
                                 srtRepository.findSrtByFilmTitle(movieTitleForCutting)
                         ).parsedSubtitlesFromOriginalSrtRows()
-                )
+                ).mergedSubtitles()
         );
     }
 

@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import ms.igrey.dev.msvideo.repository.entity.SubtitleEntity;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalTime;
 import java.util.Collection;
@@ -55,13 +56,7 @@ public class Subtitle {
 
     public Subtitle(String subElement, String filmId) {
         String[] subElementRows = subElement.split(NEXT_ROWS);
-        try {
-            numberSeq = Integer.parseInt(subElementRows[0].replaceAll("[^\\d.]", ""));
-        } catch (Exception e) {
-            log.error("filmId: {}", filmId);
-            log.error("subElement: {}", subElement);
-            throw new RuntimeException(e);
-        }
+        numberSeq = Integer.parseInt(subElementRows[0].replaceAll("[^\\d.]", ""));
         this.filmId = filmId;
         String[] startEnd = subElementRows[1].split(TIME_SEPARATOR); //  00:05:31,999 --> 00:05:34,583
         this.start = startEnd[0];
@@ -91,7 +86,11 @@ public class Subtitle {
         return entity;
     }
 
-    SubtitleQuality estimateQuality(Long durationMilisec, List<String> lines) {
+    public SubtitleQuality quality() {
+        return estimateQuality(duration(), lines());
+    }
+
+    private SubtitleQuality estimateQuality(Long durationMilisec, List<String> lines) {
         if (durationMilisec < MAX_TRASH_DURATION_MILLSEC || wordCount(lines) <= 2 || isNameOfBackgroundSound(lines)) {
             return SubtitleQuality.TRASH;
         } else if (durationMilisec < MAX_SHORT_DURATION_MILLSEC || wordCount(lines) <= 3) {
@@ -136,5 +135,20 @@ public class Subtitle {
 
     public Long duration() {
         return (endTime().toNanoOfDay() - startTime().toNanoOfDay()) / 1000_000;
+    }
+
+    // finished sentence
+    public Boolean isFinished() {
+        String lastLine = lines.get(lines.size() - 1);
+        Character lastSymbol = lastLine.trim().charAt(lastLine.trim().length() - 1);
+        if (StringUtils.contains("!?.\'\"", lastSymbol)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean startWithNewSentence() {
+        return Character.isUpperCase(lines.get(0).trim().charAt(0))
+                && !Character.isUpperCase(lines.get(0).trim().charAt(1));
     }
 }

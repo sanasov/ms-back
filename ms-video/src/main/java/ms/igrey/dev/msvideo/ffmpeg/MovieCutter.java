@@ -1,7 +1,7 @@
 package ms.igrey.dev.msvideo.ffmpeg;
 
 import ms.igrey.dev.msvideo.FSPath;
-import ms.igrey.dev.msvideo.domain.srt.Subtitles;
+import ms.igrey.dev.msvideo.domain.srt.Subtitle;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.FFprobe;
@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static net.bramp.ffmpeg.FFmpeg.FPS_24;
-import static net.bramp.ffmpeg.FFmpeg.FPS_30;
 
 public class MovieCutter {
 
@@ -34,9 +33,9 @@ public class MovieCutter {
         }
     }
 
-    public void cut(String movieTitle, Subtitles subtitles) {
+    public void cut(String movieTitle, List<Subtitle> subtitles) {
         new File(FSPath.CUT_MOVIE_PATH + "/" + movieTitle).mkdirs();
-        List<FFmpegBuilder> builders = subtitles.subtitles().stream()
+        List<FFmpegBuilder> builders = subtitles.stream()
                 .map(subtitle -> ffmpegBuilder(
                         findMovieFile(movieTitle),
                         subtitle.numberSeq(),

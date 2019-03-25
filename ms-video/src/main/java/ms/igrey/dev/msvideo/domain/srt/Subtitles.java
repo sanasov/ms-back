@@ -4,13 +4,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.apache.commons.collections.CollectionUtils;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @RequiredArgsConstructor
@@ -20,10 +16,14 @@ import java.util.stream.Stream;
 public class Subtitles {
     private final List<Subtitle> subtitles;
 
+    public String filmId() {
+        return subtitles.get(0).filmId();
+    }
+
     public List<Subtitle> mergedSubtitles() {
         LinkedNode<Subtitle> node = new LinkedNode<>(subtitles);
         do {
-            if (shortShortOrShortIdealCase(node)) {
+            if (isNotFinishedSentence(node) || shortShortOrShortIdealCase(node)) {
                 node.setElm(node.elm().union(node.next().elm()));
                 node = node.next().remove();
             } else {
@@ -33,6 +33,10 @@ public class Subtitles {
         return node.list().stream()
                 .filter(subtitle -> subtitle.quality() == SubtitleQuality.IDEAL)
                 .collect(Collectors.toList());
+    }
+
+    private boolean isNotFinishedSentence(LinkedNode<Subtitle> node) {
+        return !node.elm().isFinished() && !node.next().elm().startWithNewSentence();
     }
 
     private boolean shortShortOrShortIdealCase(LinkedNode<Subtitle> subNode) {

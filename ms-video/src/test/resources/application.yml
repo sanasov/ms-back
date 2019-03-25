@@ -4,3 +4,10 @@ elasticsearch:
   port: 9300
   cluster:
     name: elasticsearch
+eureka:
+  client:
+    enabled: false
+spring:
+  cloud:
+    config:
+      enabled: false
