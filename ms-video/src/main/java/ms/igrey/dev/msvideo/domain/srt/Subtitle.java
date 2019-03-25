@@ -3,11 +3,14 @@ package ms.igrey.dev.msvideo.domain.srt;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.experimental.Wither;
 import lombok.extern.slf4j.Slf4j;
 import ms.igrey.dev.msvideo.repository.entity.SubtitleEntity;
 import org.apache.commons.collections.CollectionUtils;
 
+import java.time.Duration;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -15,6 +18,7 @@ import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
 
+@Wither
 @Data
 @Accessors(fluent = true)
 @Slf4j
@@ -89,6 +93,16 @@ public class Subtitle {
         entity.setLines(subtitle.lines());
         entity.setTagArray(videoTypeTag);
         return entity;
+    }
+
+    public Subtitle shiftedSubtitle(Long diffTimeMilis) {
+        return this.withStart(shiftTime(startTime(), diffTimeMilis))
+                .withEnd(shiftTime(endTime(), diffTimeMilis));
+    }
+
+    private String shiftTime(LocalTime time, Long milliSec) {
+        LocalTime shiftedTime = time.minus(Duration.ofMillis(milliSec));
+        return shiftedTime.format(DateTimeFormatter.ISO_LOCAL_TIME).replace(".", ",");
     }
 
     SubtitleQuality estimateQuality(Long durationMilisec, List<String> lines) {
