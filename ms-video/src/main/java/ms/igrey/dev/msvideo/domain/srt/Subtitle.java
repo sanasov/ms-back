@@ -94,7 +94,6 @@ public class Subtitle {
         return estimateQuality(duration(), lines());
     }
 
-    private SubtitleQuality estimateQuality(Long durationMilisec, List<String> lines) {
     public Subtitle shiftedSubtitle(Long diffTimeMilis) {
         return this.withStart(shiftTime(startTime(), diffTimeMilis))
                 .withEnd(shiftTime(endTime(), diffTimeMilis));
