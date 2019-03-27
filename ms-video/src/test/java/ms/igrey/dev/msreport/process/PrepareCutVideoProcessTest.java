@@ -1,7 +1,7 @@
 package ms.igrey.dev.msreport.process;
 
 import ms.igrey.dev.msvideo.PrepareCutVideoProcess;
-import ms.igrey.dev.msvideo.config.DaoConfig;
+import ms.igrey.dev.msvideo.config.CommonConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {DaoConfig.class})
+@ContextConfiguration(classes = {CommonConfig.class})
 @ActiveProfiles("no-cloud")
 public class PrepareCutVideoProcessTest {
 
@@ -25,7 +25,12 @@ public class PrepareCutVideoProcessTest {
 
     @Test
     public void cutMovies() {
-        process.cutNewMovies();
+//        process.cutNewMovies();
+    }
+
+    @Test
+    public void cutMovieWithNewAlgorithm() {
+        process.cutMovieNewAlgorithm("Bohemian Rhapsody (2018)");
     }
 
 }

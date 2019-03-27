@@ -147,6 +147,10 @@ public class Subtitle {
         return startTime().toNanoOfDay() / 1000_000;
     }
 
+    public Long endOffset() {
+        return startOffset() + duration();
+    }
+
     public Long duration() {
         return (endTime().toNanoOfDay() - startTime().toNanoOfDay()) / 1000_000;
     }

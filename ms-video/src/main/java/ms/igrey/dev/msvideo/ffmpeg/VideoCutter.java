@@ -40,23 +40,25 @@ public class VideoCutter {
         new File(FSPath.CUT_MOVIE_PATH + "/" + movieTitle).mkdirs();
         VideoInterval interval = new VideoInterval(subtitles.subtitles().size(), partsAmount);
         for (int i = 1; i <= partsAmount; i++) {
+            System.out.println(subtitles.subtitles().get(interval.startNumSeq(i)).startOffset());
+            System.out.println(subtitles.subtitles().get(interval.endNumSeq(i)).endOffset());
             executor.createJob(
                     cutPartFFMPEGBuilder(
-                            findMoviePartFile(movieTitle,i),
+                            findMovieFile(movieTitle),
                             i,
                             subtitles.subtitles().get(interval.startNumSeq(i)).startOffset(),
-                            subtitles.subtitles().get(interval.endNumSeq(i)).duration()
+                            subtitles.subtitles().get(interval.endNumSeq(i)).endOffset()
                     )
             ).run();
         }
     }
 
 
-    public void cut(String movieTitle, List<Subtitle> subtitles) {
+    public void cut(String movieTitle, List<Subtitle> subtitles, Integer partNumber) {
         new File(FSPath.CUT_MOVIE_PATH + "/" + movieTitle).mkdirs();
         List<FFmpegBuilder> builders = subtitles.stream()
                 .map(subtitle -> cutFragmentFFMPEGBuilder(
-                        findMovieFile(movieTitle),
+                        new File(FSPath.CUT_MOVIE_PATH + "/" + movieTitle + "/part" + partNumber + ".mp4"),
                         subtitle.numberSeq(),
                         subtitle.startOffset(),
                         subtitle.duration()
@@ -74,12 +76,6 @@ public class VideoCutter {
                 .orElseThrow(() -> new RuntimeException("There is no movie " + movieTitle + " in movie storage"));
     }
 
-    private File findMoviePartFile(String movieTitle, Integer partNumber) {
-        return FileUtils.listFiles(new File(FSPath.CUT_MOVIE_PATH + "/" + movieTitle), null, false).stream()
-                .filter(file -> file.getName().contains("part" + partNumber))
-                .findAny()
-                .orElseThrow(() -> new RuntimeException("There is no part of movie " + movieTitle + " in movie cut with part number: " + partNumber));
-    }
 
     private void removeMoviePartFiles(String movieTitle) {
         FileUtils.listFiles(new File(FSPath.CUT_MOVIE_PATH + "/" + movieTitle), null, false).stream()
